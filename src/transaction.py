@@ -3,7 +3,7 @@ import mt940
 from dataclasses import dataclass
 from datetime import date
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 
 class Currency(str, Enum):
@@ -12,6 +12,21 @@ class Currency(str, Enum):
     EUR = 'EUR'
     GBP = 'GBP'
 
+class TransactionType(str, Enum):
+    RENT = 'Rent'
+    TRANSPORT = 'Transport'
+    TRAVEL = 'Travel'
+    EDUCATION = 'Education'
+    FOOD = 'Food'
+    HOUSEHOLD = 'Household'
+    SAVINGS = 'Savings'
+    LEISURE = 'Leisure'
+    CLOTHES = 'Clothes'
+    HEALTH_AND_FITNESS = 'Health and Fitness'
+    INSURANCE = 'Insurance'
+    INFRASTRUCTURE = 'Infrastructure'
+    SUBSCIPTIONS = 'Subscriptions'
+
 
 @dataclass
 class Transaction:
@@ -19,11 +34,12 @@ class Transaction:
     currency: Currency
     transaction_date: date
     detail: str
+    transaction_type: Optional[TransactionType] = None
 
     @staticmethod
     def list_from_swift_file(path: str) -> List["Transaction"]:
         if not os.path.isfile(path):
-            print("Path does not exist, can't load swift file.")
+            print(f"Path {path} does not exist, can't load swift file.")
             return False
         try:
             with open(path, 'r', encoding='latin1') as file:
@@ -47,7 +63,7 @@ class Transaction:
 
 def main():
     abs_path = os.path.abspath(__file__)
-    path = f'{os.path.dirname(abs_path)}/../resources/transactions.mt940'
+    path = f'{os.path.dirname(abs_path)}/../resources/transaction_lists/transactions.mt940'
     check = Transaction.list_from_swift_file(path)
     print(check)
 
